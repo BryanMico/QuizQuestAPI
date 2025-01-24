@@ -29,9 +29,11 @@ exports.adminLogin = async (req, res) => {
   }
 };
 
+
 exports.login = async (req, res) => {
   const { email, password, role } = req.body;
 
+  // Check if the role is valid ('teacher' or 'student')
   if (!role || (role !== 'teacher' && role !== 'student')) {
     return res.status(400).json({ message: 'Invalid role specified' });
   }
@@ -51,6 +53,9 @@ exports.login = async (req, res) => {
 
     // Generate token
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // Debugging the token
+    console.log('Generated JWT Token:', token);
 
     return res.status(200).json({ message: 'Login successful', token });
   } catch (error) {
